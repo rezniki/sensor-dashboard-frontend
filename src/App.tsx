@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import axios from "axios";
+import { TemperatureChart } from "./components/TemperatureChart";
+import type { Reading } from "./types/Reading";
+import { API_BASE_URL, SOCKET_URL } from "./config";
+
+const socket = io(SOCKET_URL);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [readings, setReadings] = useState<Reading[]>([]);
+
+  // Загружаем историю через REST
+  useEffect(() => {
+    axios
+      .get<Reading[]>(`${API_BASE_URL}/api/readings`)
+      .then(res => setReadings(res.data))
+      .catch(err => console.error("Ошибка загрузки истории:", err));
+  }, []);
+
+  // Подключаемся к Socket.IO
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("✅ Подключено к WebSocket серверу");
+    });
+
+    socket.on("history", (data: Reading[]) => {
+      console.log("Получена история через WS:", data);
+      setReadings(data);
+    });
+
+    socket.on("new-reading", (data: Reading) => {
+      console.log("Новое значение:", data);
+      setReadings(prev => [...prev, data]);
+    });
+
+    socket.on("disconnect", () => {
+      console.warn("❌ Соединение потеряно");
+    });
+
+    return () => {
+      socket.off("history");
+      socket.off("new-reading");
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        padding: "20px",
+        backgroundColor: "#f9fafb"
+      }}
+    >
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>
+        Мониторинг температуры датчика
+      </h1>
+
+      <div
+        style={{
+          width: "90%",
+          maxWidth: "800px",
+          background: "#fff",
+          borderRadius: "16px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          padding: "20px"
+        }}
+      >
+        <TemperatureChart readings={readings} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
