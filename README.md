@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Sensor Dashboard — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Фронтенд для отображения показаний датчиков температуры в реальном времени.  
+Реализовано на **React + TypeScript + Vite + Chart.js + Socket.IO**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Коротко о проекте
 
-## React Compiler
+- Загружает историю показаний с backend через REST (`/api/readings`).
+- Подписывается на live-обновления через Socket.IO (`history`, `new-reading`).
+- Отображает данные на линейном графике (Chart.js).
+- Конфигурация через `.env` (Vite environment variables).
+- Готов к деплою на Vercel.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Требования (локально)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js >= 18
+- npm
+- Рабочий backend (Express + Socket.IO) доступен по URL, указанному в `.env`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Быстрый старт (локально)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Клонируйте репозиторий и перейдите в папку:
+```bash
+git clone <repo-url>
+cd sensor-dashboard-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Установите зависимости:
+```bash
+npm install
 ```
+
+3. Создайте файл .env в корне (см. пример ниже) и укажите адрес вашего backend:
+```bash
+VITE_API_BASE_URL=http://localhost:4000
+VITE_SOCKET_URL=http://localhost:4000
+```
+
+4. Запустите dev-сервер:
+```bash
+npm run dev
+```
+
+5. Откройте в браузере:
+```bash
+http://localhost:5173
+```
+
+---
+
+## Файлы и структура (важные места)
+```bash
+src/
+├─ main.tsx            # точка входа
+├─ App.tsx             # главный компонент
+├─ config.ts           # константы (подхватывает import.meta.env)
+├─ types/Reading.ts    # TS типы
+└─ components/
+   └─ TemperatureChart.tsx   # компонент с Chart.js
+.vitepress/ (опционально)
+```
+
+## Скриншот
+
+![Sensor Dashboard](<img width="1894" height="939" alt="image" src="https://github.com/user-attachments/assets/96991225-5ad5-4689-bdec-d0956bfe6689" />)
+
+
