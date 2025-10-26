@@ -68,4 +68,4 @@ src/
 
 ## Скриншот
 
-![Sensor Dashboard](https://github.com/user-attachments/assets/e0a69ede-88a3-4f43-bd67-c97d54c69e40")
+![Sensor Dashboard](https://github.com/user-attachments/assets/c67f35f5-dcdc-424a-bff5-4dc9b1e3f940)
