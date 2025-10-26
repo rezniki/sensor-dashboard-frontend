@@ -68,6 +68,4 @@ src/
 
 ## Скриншот
 
-![Sensor Dashboard](<img width="1894" height="939" alt="image" src="https://github.com/user-attachments/assets/96991225-5ad5-4689-bdec-d0956bfe6689" />)
-
-
+![Sensor Dashboard](https://github.com/user-attachments/assets/e0a69ede-88a3-4f43-bd67-c97d54c69e40")
