@@ -27,7 +27,7 @@
 
 1. Клонируйте репозиторий и перейдите в папку:
 ```bash
-git clone <repo-url>
+git clone <git@github.com:rezniki/sensor-dashboard-frontend.git>
 cd sensor-dashboard-frontend
 ```
 
